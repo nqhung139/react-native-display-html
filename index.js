@@ -4,7 +4,7 @@ import WebViewBridge from 'react-native-webview-bridge';
 
 export default class DisplayHTML extends Component {
 
-    static propTypes () {
+    static propTypes() {
         return {
             htmlString: PropTypes.string.isRequired,
             onMessage: PropTypes.func,
@@ -29,7 +29,7 @@ export default class DisplayHTML extends Component {
         bodyClass: ''
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             height: props.defaultHeight + props.additionalHeight
@@ -42,7 +42,7 @@ export default class DisplayHTML extends Component {
         this._buildAdditionalScripts();
     }
 
-    get HTMLSource () {
+    get HTMLSource() {
         return `
             <!DOCTYPE html>
             <title>${this.props.title}</title>
@@ -54,11 +54,11 @@ export default class DisplayHTML extends Component {
             </html>`;
     }
 
-    get HTMLStyles () {
+    get HTMLStyles() {
         return this.props.HTMLStyles ? `<style>${this.props.HTMLStyles}</style>` : '';
     }
 
-    get source () {
+    get source() {
         let source = { html: this.HTMLSource };
 
         if (Platform.OS === 'android' && Platform.Version > 18) {
@@ -78,8 +78,8 @@ export default class DisplayHTML extends Component {
      * accordingly.
      * Note : this isn't transpiled and must be written in ES5 !
      */
-    heightScript () {
-        function updateHeight () {
+    heightScript() {
+        function updateHeight() {
             var B = document.body;
             var height;
             if (typeof document.height !== 'undefined') {
@@ -100,7 +100,7 @@ export default class DisplayHTML extends Component {
      * in the webview.
      * @param {function} func
      */
-    _stringifyFunc (func) {
+    _stringifyFunc(func) {
         return `(${String(func)})();`;
     }
 
@@ -108,7 +108,7 @@ export default class DisplayHTML extends Component {
      * Build a single large string with all scripts so it can be injected
      * in the webview.
      */
-    _buildAdditionalScripts () {
+    _buildAdditionalScripts() {
         this._injectedScripts = '';
         this.additionalScripts.forEach((func) => {
             this._injectedScripts += this._stringifyFunc(func);
@@ -121,7 +121,7 @@ export default class DisplayHTML extends Component {
      * 'height' key. Else, it fires this.props.onMessage.
      * @param {object} event
      */
-    onMessage (event) {
+    onMessage(event) {
         const { additionalHeight, onMessage } = this.props;
         const eventData = JSON.parse(event);
         const { height } = eventData;
@@ -138,17 +138,24 @@ export default class DisplayHTML extends Component {
         }
     }
 
-    render () {
+    stopLoading() {
+        this.WebViewBridge
+            && this.WebViewBridge.stopLoading
+            && this.WebViewBridge.stopLoading()
+    }
+
+    render() {
         const { style, containerStyle } = this.props;
 
         return (
             <View style={containerStyle}>
                 <WebViewBridge
-                  {...this.props}
-                  injectedJavaScript={this._injectedScripts}
-                  style={[style, { height: this.state.height }]}
-                  source={this.source}
-                  onBridgeMessage={this.onMessage}
+                    {...this.props}
+                    ref={(sef) => { this.WebViewBridge = sef; }}
+                    injectedJavaScript={this._injectedScripts}
+                    style={[style, { height: this.state.height }]}
+                    source={this.source}
+                    onBridgeMessage={this.onMessage}
                 />
             </View>
         );
