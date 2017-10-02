@@ -81,13 +81,7 @@ export default class DisplayHTML extends Component {
     heightScript() {
         function updateHeight() {
             var B = document.body;
-            var height;
-            if (typeof document.height !== 'undefined') {
-                height = document.height;
-            } else {
-                height = Math.max(B.scrollHeight, B.offsetHeight);
-            }
-            window.WebViewBridge.send(JSON.stringify({ height: height }));
+            window.WebViewBridge.send(JSON.stringify({ height: B.offsetHeight }));
         }
         if (window.WebViewBridge) {
             updateHeight();
@@ -125,7 +119,6 @@ export default class DisplayHTML extends Component {
         const { additionalHeight, onMessage } = this.props;
         const eventData = JSON.parse(event);
         const { height } = eventData;
-
         if (height) {
             let newHeight = height;
             if (!this._additionalHeightInjected) {
