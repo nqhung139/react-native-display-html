@@ -141,7 +141,7 @@ export default class DisplayHTML extends Component {
         const { style, containerStyle } = this.props;
 
         return (
-            <View style={containerStyle}>
+            <View style={[{ height: this.state.height }, containerStyle]}>
                 <WebViewBridge
                     {...this.props}
                     ref={(sef) => { this.WebViewBridge = sef; }}
