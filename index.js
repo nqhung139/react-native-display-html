@@ -139,8 +139,8 @@ export default class DisplayHTML extends Component {
     }
 
     postMessage(data){
-        this.WebViewBridge.postMessage 
-        && this.WebViewBridge.postMessage (data)
+        this.WebViewBridge.send 
+        && this.WebViewBridge.send(data)
     }
 
     render() {
