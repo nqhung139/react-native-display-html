@@ -138,6 +138,11 @@ export default class DisplayHTML extends Component {
             && this.WebViewBridge.stopLoading()
     }
 
+    postMessage(data){
+        this.WebViewBridge.postMessage 
+        && this.WebViewBridge.postMessage (data)
+    }
+
     render() {
         const { style, containerStyle } = this.props;
 
